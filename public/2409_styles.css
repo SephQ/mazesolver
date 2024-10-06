@@ -10,33 +10,31 @@ CSS Reset
 }
 /* Actual styling */
 * {
-  margin-left: 10px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  padding: 10;
-  padding-top: 10;
+  margin: 100;
+  padding: 100;
   outline: 100;
   /* text-align: center; */
   /* background-color:rebeccapurple; */
-  background-color:rgb(216, 204, 228);
-  vertical-align: baseline;
 }
 
-div {
-  font-size: large;
-  color: black;
-  font-family: 'Arial Narrow';
-  font-weight: normal;
+#field {
+  display: grid;
+  grid-template: minmax(10px, 1fr) minmax(10px, 1fr) / repeat(4, 1fr);
+  /* gap: 20px; */
+  background-color:rgb(159, 0, 0);
+  
 }
-.main-banner {
-  font-size: 40px;
-  background-color:rgb(98, 203, 205);
+
+li.style {
+  /* white-space: pre; */
 }
+
 .main, main {
   font-size: 30px;
-  background-color:rgb(162, 120, 203);
+  background-color:rebeccapurple;
 }
-.button-area {
+
+button-area {
   text-align: center;
   font-size: 30px;
   background-color:rgb(252, 250, 253) !important;
