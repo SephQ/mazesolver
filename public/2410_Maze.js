@@ -116,58 +116,21 @@ const defaultHeight = 39;
 const defaultWidth = 67; // must be 1 mod 3.
 
 let mazeInput = document.querySelector("#maze-input");  // Update variable for input
-mazeInput.value = 
-` .===============================================================.
- |  ,-----------------,                                          |
- | /| HÉLP THÉ BUNNY  |==========.===.   .===.   .===========.   |
- || |    FIND HIŚ     |          |   |   |   |   |      .-.  | E |
- || |  ÉAŚTÉR ÉGG !   |  |===|   |   |   |   |   |..==./xxx\\ | N |
- || |_________________|          |   |       |   /<<<<<\\    || D |
- ||/_________________/   .======='   |   .   |   \\>>>>>/xxxx/--. |
- |   |   |           |   |           |   |   |   |\`'==''---; * *\`\\
- |   |   '==========='   |   |======='   |   |   |   ,===. \\* * */
- |   |                   |               |   |   |   |   |  '--'\`|
- |   '===============|   '===.   |===.   |   |   |==='   '=======|
- |                           |       |   |   |   |               |
- |   |===============.   .   '===|   |   |===|   |   .=======.   |
- |                   |   |           |   |   |   |   |       |   |
- |   .===========.   |   |   |===.   |   |   |   |   |   |   |   |
- |   |           |   |   |       |   |   |   |   |   |   |   |   |
- |   |   .===.   |   |   |===.   '===|   |   '==='   |   |   |   |
- |   |   |   |   |   |   |   |       |   |           |   |   |   |
- |   '==='   /\`\\ '==='   |   '===.   |   '===========|   |   |   |
- |          / : |                |   |               |   |   |   |
- | _.._=====| '/ '===|   .======='   '===========.   |   |   |   |
- /\`    \\    | /          |                       |   |   |       |
-|  .-._ '-"\` (=======.   |   .===============.   |   |   '===.   |
-|_/  |/   o  o\\==.   |   |   |               |   |   |       |   |
- | S ||  >   @ )<|   |   |   |   .=======.   |   |   |===.   |   |
- | T | \\  '--\`/  |   |   |   |   |       |   |   |   |   |   |   |
- | A | / '--<\`   |   |   |   |   |   |   |   |   '==='   |   '   |
- | R || ,    \\\\  |           |   |   |   |   |           |       |
- | T |; ;     \\\\__'======.   |   |   '==='   |   .===.   |   |   |
- |   / /      |.__)==,   |   |   |           |   |   |   |   |   |
- |  (_/,--.   ; //"""\\\\  |   |   '==========='   |   '==='   |   |
- |  { \`|   \\_/  ||___||  |   |                   |           |   |
- |   ;-\\   / |  |(___)|  |   '===========.   |   '=======.   |   |
- |   |  | /  |  |XXXXX|  |               |   |           |   |   |
- |   | /  \\  '-,\\XXXXX/  |   .==========='   '=======.   |   |   |
- |   | \\__|----' \`"""\`   |   |                       |   |   |   |
- |   '==================='   '======================='   '==='   |
- |                                                               |
- '==jgŚ=='01=====================================================`;
-let mazeInputText = mazeInput.value;
-let mazeArray = mazeInputText.split("\n").map((line) => line.toUpperCase().split(""));
-
 const mazeOutput = document.querySelector("#maze-output");
 const solveButton = document.getElementById("solve");
 const randomiseButton = document.getElementById("randomise");
 const solvableRandomiseButton = document.getElementById("solvable-randomise");
+const bunnyMazeButton = document.getElementById("bunny");
 let solved = false;
+
+bunnyMazeHandler();  // Set the Easter Bunny maze as default
+let mazeInputText = mazeInput.value;
+let mazeArray = mazeInputText.split("\n").map((line) => line.toUpperCase().split(""));
 
 solveButton.addEventListener('click', solveHandler);
 randomiseButton.addEventListener('click', randomiseHandler.bind(this, defaultHeight, defaultWidth, false));
 solvableRandomiseButton.addEventListener('click', randomiseHandler.bind(this, defaultHeight, defaultWidth, true));
+bunnyMazeButton.addEventListener('click', bunnyMazeHandler);
 mazeInput.addEventListener('input', inputChangeHandler)
 
 inputHandler();  // Initialize input to HTML default maze (until user edits it)
@@ -312,4 +275,49 @@ function randomiseHandler(HEIGHT = defaultHeight, WIDTH = defaultWidth, forceSol
     }
     return map
   }
+}
+function bunnyMazeHandler() {
+  mazeInput.value = 
+` .===============================================================.
+ |  ,-----------------,                                          |
+ | /| HÉLP THÉ BUNNY  |==========.===.   .===.   .===========.   |
+ || |    FIND HIŚ     |          |   |   |   |   |      .-.  | E |
+ || |  ÉAŚTÉR ÉGG !   |  |===|   |   |   |   |   |..==./xxx\\ | N |
+ || |_________________|          |   |       |   /<<<<<\\    || D |
+ ||/_________________/   .======='   |   .   |   \\>>>>>/xxxx/--. |
+ |   |   |           |   |           |   |   |   |\`'==''---; * *\`\\
+ |   |   '==========='   |   |======='   |   |   |   ,===. \\* * */
+ |   |                   |               |   |   |   |   |  '--'\`|
+ |   '===============|   '===.   |===.   |   |   |==='   '=======|
+ |                           |       |   |   |   |               |
+ |   |===============.   .   '===|   |   |===|   |   .=======.   |
+ |                   |   |           |   |   |   |   |       |   |
+ |   .===========.   |   |   |===.   |   |   |   |   |   |   |   |
+ |   |           |   |   |       |   |   |   |   |   |   |   |   |
+ |   |   .===.   |   |   |===.   '===|   |   '==='   |   |   |   |
+ |   |   |   |   |   |   |   |       |   |           |   |   |   |
+ |   '==='   /\`\\ '==='   |   '===.   |   '===========|   |   |   |
+ |          / : |                |   |               |   |   |   |
+ | _.._=====| '/ '===|   .======='   '===========.   |   |   |   |
+ /\`    \\    | /          |                       |   |   |       |
+|  .-._ '-"\` (=======.   |   .===============.   |   |   '===.   |
+|_/  |/   o  o\\==.   |   |   |               |   |   |       |   |
+ | S ||  >   @ )<|   |   |   |   .=======.   |   |   |===.   |   |
+ | T | \\  '--\`/  |   |   |   |   |       |   |   |   |   |   |   |
+ | A | / '--<\`   |   |   |   |   |   |   |   |   '==='   |   '   |
+ | R || ,    \\\\  |           |   |   |   |   |           |       |
+ | T |; ;     \\\\__'======.   |   |   '==='   |   .===.   |   |   |
+ |   / /      |.__)==,   |   |   |           |   |   |   |   |   |
+ |  (_/,--.   ; //"""\\\\  |   |   '==========='   |   '==='   |   |
+ |  { \`|   \\_/  ||___||  |   |                   |           |   |
+ |   ;-\\   / |  |(___)|  |   '===========.   |   '=======.   |   |
+ |   |  | /  |  |XXXXX|  |               |   |           |   |   |
+ |   | /  \\  '-,\\XXXXX/  |   .==========='   '=======.   |   |   |
+ |   | \\__|----' \`"""\`   |   |                       |   |   |   |
+ |   '==================='   '======================='   '==='   |
+ |                                                               |
+ '==jgŚ=='01=====================================================`;
+ // Set solved state to false
+ solved = false;
+ mazeOutput.value = "";
 }
