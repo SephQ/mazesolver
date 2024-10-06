@@ -5,7 +5,6 @@ CSS Reset
   border: 0;
   outline: 0;
   font-size: 100%;
-  /* font-family: monospace; */
   vertical-align: baseline;
   /* background: transparent; */
 }
@@ -21,6 +20,10 @@ CSS Reset
   /* background-color:rebeccapurple; */
   background-color:rgb(216, 204, 228);
   vertical-align: baseline;
+}
+
+.text-area {
+  font-family: 'Courier New';  /* To  ensure mobile doesn't ruin ASCII art spacing */
 }
 
 div {

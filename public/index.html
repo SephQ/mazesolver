@@ -1,47 +1,49 @@
-CSS Reset
-* {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  font-size: 100%;
-  vertical-align: baseline;
-  /* background: transparent; */
-}
-/* Actual styling */
-* {
-  margin-left: 10px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  padding: 10;
-  padding-top: 10;
-  outline: 100;
-  /* text-align: center; */
-  /* background-color:rebeccapurple; */
-  background-color:rgb(216, 204, 228);
-  vertical-align: baseline;
-}
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<!-- <script>!function(){alert("Hey, how did you learn to make alerts?!")}()</script> -->
+<script src="2410_Maze.js" defer></script>
+<link rel="stylesheet" type="text/css" href="2410_Maze.css" />
 
-.text-area {
-  font-family: 'Courier New';  /* To  ensure mobile doesn't ruin ASCII art spacing */
-}
-
-div {
-  font-size: large;
-  color: black;
-  font-family: 'Arial Narrow';
-  font-weight: normal;
-}
-.main-banner {
-  font-size: 40px;
-  background-color:rgb(98, 203, 205);
-}
-.main, main {
-  font-size: 30px;
-  background-color:rgb(162, 120, 203);
-}
-.button-area {
-  text-align: center;
-  font-size: 30px;
-  background-color:rgb(252, 250, 253) !important;
-}
+<head>
+  <title>Maze Solver</title>
+</head>
+<body>
+  <div id="backdrop"></div>
+  <header></header>
+  <main class="main">
+    <div class="main-banner"><h1>Maze Solver</h1></div>
+    <p style="font-size:20px;">by Περσεφόνη</p>
+    <p style="font-size:14px;">S|s = start, E|e = end, spaces = paths, everything else = walls</p>
+    <!-- <h2>Maze:</div></h2> -->
+    <textarea
+      id="maze-input"
+      style="height: calc(630px); width: calc(700px)"
+      class="text-area"
+      oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="none"
+      spellcheck="false"
+    >
+ </textarea>
+ <!-- from https://www.asciiart.eu/art-and-design/mazes -->
+    <h5>
+      <!-- <span style="color: #a15592" id="solve-btn-span">Solve</span> -->
+      <button id="solve" class="btn btn--success">Solve</button>
+      <!-- <span style="color: #a15592" id="randomise-btn-span">Randomise the maze</span> -->
+      <button id="randomise" class="btn btn--success">Random maze</button>
+      <!-- <span style="color: #a15592" id="solvable-randomise-btn-span">Solvable but Random</span> -->
+      <button id="solvable-randomise" class="btn btn--success">Random Solvable Maze</button>
+      <button id="bunny" class="btn btn--success">Bunny Maze</button></h5>
+    <textarea
+      id="maze-output"
+      style="height: calc(630px); width: calc(700px); font: courier"
+      class="text-area"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="none"
+      spellcheck="false"
+    >
+    </textarea>
+  </main>
+</body>
