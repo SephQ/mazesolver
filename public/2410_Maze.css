@@ -25,6 +25,7 @@ CSS Reset
 .text-area {
   /* To  ensure mobile doesn't ruin ASCII art spacing */
   /* font-family: 'Arial'; */
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 div {
