@@ -11,8 +11,8 @@ function options(node, visited) {
   const [x, y] = node;
   const newVisited = visited.slice(); // Shallow copy
   const list = [
-    [x, y + 1],
     [x + 1, y],
+    [x, y + 1],
     [x, y - 1],
     [x - 1, y],
   ]
