@@ -116,7 +116,8 @@ const defaultHeight = 39;
 const defaultWidth = 67; // must be 1 mod 3.
 
 let mazeInput = document.querySelector("#maze-input");  // Update variable for input
-mazeInput.value = String.raw(` .===============================================================.
+mazeInput.value = 
+` .===============================================================.
  |  ,-----------------,                                          |
  | /| HÉLP THÉ BUNNY  |==========.===.   .===.   .===========.   |
  || |    FIND HIŚ     |          |   |   |   |   |      .-.  | E |
@@ -154,7 +155,7 @@ mazeInput.value = String.raw(` .================================================
  |   | \__|----' \`"""\`   |   |                       |   |   |   |
  |   '==================='   '======================='   '==='   |
  |                                                               |
- '==jgŚ=='01=====================================================`)
+ '==jgŚ=='01=====================================================`;
 let mazeInputText = mazeInput.value;
 let mazeArray = mazeInputText.split("\n").map((line) => line.toUpperCase().split(""));
 
