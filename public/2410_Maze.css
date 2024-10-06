@@ -23,7 +23,7 @@ CSS Reset
 }
 
 .text-area {
-  font-family: 'Courier New';  /* To  ensure mobile doesn't ruin ASCII art spacing */
+  font-family: 'Arial';  /* To  ensure mobile doesn't ruin ASCII art spacing */
 }
 
 div {
