@@ -93,7 +93,7 @@ function finish(path) {
   for (let idx = 0; idx < path.length - 1; idx++) {
     const [i, j] = path[idx]; // Current position
     const [u, v] = path[idx + 1]; // Next position in the path
-    const walkSymbol = "."; // u > i ? "→" : u < i ? "←" : j > v ? "↑" : "↓";
+    const walkSymbol = "⋅"; // u > i ? "→" : u < i ? "←" : j > v ? "↑" : "↓";
 
     // Only modify the path cells that are spaces or the start (don't overwrite walls)
     if (mazeArray[j][i] === " " || mazeArray[j][i] === startSymbol) {
