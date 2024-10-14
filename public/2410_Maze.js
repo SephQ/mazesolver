@@ -163,7 +163,10 @@ function solveHandler() {
   } else {
     this.checked = [];  // the checked array (nodes in any path)
     this.h = mazeArray.length;
-    this.w = mazeArray[0].length;
+    // this.w = mazeArray[0].length;
+    this.w = Math.max( ...mazeArray.map((x) => { 
+      return x.length
+    }) );
 
     const startY = mazeArray.findIndex((row) => row.includes(startSymbol));
     const startX = mazeArray[startY].indexOf(startSymbol);
