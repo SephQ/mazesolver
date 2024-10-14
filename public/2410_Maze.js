@@ -81,32 +81,46 @@ function solveHandler() {
   }
 
 }
-function validDimensions(HEIGHT, WIDTH) {
+function validDimensions(h, w) {
+  const MAX_HEIGHT = 100;
+  const MAX_WIDTH = 300;
+  if (h === 0 && w === 0) {
+    // User wants height and width randomised
+    h = parseInt(Math.random() * (MAX_HEIGHT - 1)) + 1;
+    w = parseInt(Math.random() * (MAX_WIDTH - 2)) + 2;
+    return [h, w];
+  }
   if (
-    HEIGHT < 2 || HEIGHT >= 100 ||
-    WIDTH < 3 || WIDTH >= 300
+    h < 1 || h > MAX_HEIGHT || isNaN(h) ||
+    w < 2 || w > MAX_WIDTH || isNaN(w)
+
   ) {
-    const invalidText = `Invalid dimensions (H x W).
-1 < H < 100
-3 < W < 300`
+    const invalidText = `Invalid dimensions (H x W) (${h} x ${w}).
+Allowed ranges:
+1 ≤ H ≤ ${MAX_HEIGHT}
+2 ≤ W ≤ ${MAX_WIDTH}`
     console.log(invalidText);
     mazeOutput.value = invalidText;  // If there were invalid dimensions, let the user know
     return false;
   }
-  return true;
+  return [h, w];
 }
 function randomiseHandler(forceSolvable = false) {
   // Randomise the map into a new one with size HEIGHT and WIDTH
   // Use "S" and "E" for start and end
-  const HEIGHT = +randHeightInput.value;
-  const WIDTH = +randWidthInput.value;
-  if (!validDimensions(HEIGHT, WIDTH)) {
+  let height = +randHeightInput.value;
+  let width = +randWidthInput.value;
+  let dimensions = validDimensions(height, width);
+  if (dimensions === false) {
     return
+  } else {
+    height = dimensions[0];
+    width = dimensions[1];
   }
   // Set the size of the input and output to the dimensions + some buffer
   // https://stackoverflow.com/questions/3392493/adjust-width-of-input-field-to-its-input
-  const boxHeight = HEIGHT * 2 + 10;
-  const boxWidth = WIDTH + 30;
+  const boxHeight = height * 2 + 10;
+  const boxWidth = width + 30;
   const newStyle = `height: ${boxHeight}ch; width: ${boxWidth}ch; font: courier`
   mazeInput.style = newStyle;
   mazeOutput.style = newStyle;
@@ -125,9 +139,9 @@ function randomiseHandler(forceSolvable = false) {
       return randBit + "|";
     }
   }
-  const W_THIRD = parseInt((WIDTH - 1) / 3);
-  const y = [...Array(HEIGHT).keys()];
-  const x = [...Array(WIDTH).keys()];
+  const W_THIRD = parseInt((width - 1) / 3);
+  const y = [...Array(height).keys()];
+  const x = [...Array(width).keys()];
   const xRand = [...Array(W_THIRD).keys()];  // Since mazes are drawn with 3 horizontal spaces for each vertical
   let finalMap;
   let map;
@@ -137,7 +151,7 @@ function randomiseHandler(forceSolvable = false) {
   while (!solved) {
     map = []
     y.forEach( (j, idx) => {
-      row = (idx == 0 || idx == HEIGHT - 1) ? "+--".repeat(W_THIRD) + "+" : randRow(idx)
+      row = (idx == 0 || idx == height - 1) ? "+--".repeat(W_THIRD) + "+" : randRow(idx)
       map.push(row)
       }
     )
@@ -159,27 +173,27 @@ function randomiseHandler(forceSolvable = false) {
     // Start is always on the north or west border, End on East or South
     const limitEntry = true;    // Prevent placement of start and end on "+" positions (corners)
     let h, w;
-    let validCols = [...Array(WIDTH).keys()].filter( (i) => { return i % 3 > 0 } );
+    let validCols = [...Array(width).keys()].filter( (i) => { return i % 3 > 0 } );
     let firstRow = map[0].split("");
-    let lastRow = map[HEIGHT-1].split("");
+    let lastRow = map[height-1].split("");
     if (limitEntry) {
-      h = parseInt((HEIGHT - 1) / 2);
-      w = parseInt(2 * (WIDTH - 1) / 3);
+      h = parseInt((height - 1) / 2);
+      w = parseInt(2 * (width - 1) / 3);
     } else {
-      h = HEIGHT;
-      w = WIDTH;
+      h = height;
+      w = width;
     }
     const totalOptions = h + w;
     let startSeed = parseInt((totalOptions + 0.5 - 1e-9) * Math.random());
     let endSeed = parseInt((totalOptions + 0.5 - 1e-9) * Math.random());
     // Note: +0.5 to ensure rounding down doesn't make the biggest number half as likely as all others, makes it 'fair'. +0.499... would be ideal hence the -1e-9, preventing HEIGHT+WIDTH as a result (0->HEIGHT+WIDTH-1).
     console.log('h,w,totalOptions,HEIGHT,WIDTH,startSeed,endSeed,startSeed*2+1,endSeed*2+1')
-    console.log(h,w,totalOptions,HEIGHT,WIDTH,startSeed,endSeed,startSeed*2+1,endSeed*2+1)
+    console.log(h,w,totalOptions,height,width,startSeed,endSeed,startSeed*2+1,endSeed*2+1)
     // If startSeed < h, then it's on the West side in that row.
     // If endSeed < h, then it's on the East side in that row.
     if (startSeed < h) {
       startSeed = startSeed * 2 + 1;
-      if (startSeed == HEIGHT) startSeed--;
+      if (startSeed == height) startSeed--;
       let row = map[startSeed].split("");
       row[0] = startSymbol;
       map[startSeed] = row.join("");
@@ -191,15 +205,15 @@ function randomiseHandler(forceSolvable = false) {
     }
     if (endSeed < h) {
       endSeed = endSeed * 2 + 1;
-      if (endSeed == HEIGHT) endSeed--;
+      if (endSeed == height) endSeed--;
       let row = map[endSeed].split("");
-      row[WIDTH-1] = endSymbol;
+      row[width-1] = endSymbol;
       map[endSeed] = row.join("");
     } else {
       if (endSeed == totalOptions) endSeed--;
       let col = validCols[endSeed - h];
       lastRow[col] = endSymbol;
-      map[HEIGHT-1] = lastRow.join("");
+      map[height-1] = lastRow.join("");
     }
     return map
   }
