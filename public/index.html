@@ -4,7 +4,6 @@
 <script src="2410_Maze.js" defer></script>
 <link rel="stylesheet" type="text/css" href="2410_Maze.css" />
 <link rel="icon" href="favicon.ico?" type="image/x-icon">
-
 <head>
   <title>Maze Solver</title>
 </head>
@@ -18,7 +17,7 @@
     <!-- <h2>Maze:</div></h2> -->
     <textarea
       id="maze-input"
-      style="height: calc(650px); width: calc(1000px)"
+      style="height: 90ch; width: 90ch; font: courier"
       class="text-area"
       oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
       autocomplete="off"
@@ -36,9 +35,13 @@
       <!-- <span style="color: #a15592" id="solvable-randomise-btn-span">Solvable but Random</span> -->
       <button id="solvable-randomise" class="btn btn--success">Random Solvable Maze</button>
       <button id="bunny" class="btn btn--success">Bunny Maze (Art by Joan Stark)</button></h5>
+      <div>Random Map Size: 
+        <input id="rand-height" style="width:4ch">
+        <input id="rand-width" style="width:4ch">
+        (0,0) for random sizes.</div>
     <textarea
       id="maze-output"
-      style="height: calc(650px); width: calc(1000px); font: courier"
+      style="height: 90ch; width: 90ch; font: courier"
       class="text-area"
       autocomplete="off"
       autocorrect="off"

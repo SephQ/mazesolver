@@ -1,119 +1,6 @@
 // Maze Solver
-function content(node) {
-  // Gives the content of the maze's jth row and ith column or null if out-of-bounds
-  const [i, j] = node;
-  if (!mazeArray[j] || !mazeArray[j][i]) return null;
-  return mazeArray[j][i];
-}
-
-function options(node, visited) {
-  // Gives the options to travel from node, removing illegal positions (out-of-bounds, walls and back-tracking)
-  const [x, y] = node;
-  const newVisited = visited.slice(); // Shallow copy
-  const list = [
-    [x + 1, y],
-    [x, y + 1],
-    [x, y - 1],
-    [x - 1, y],
-  ]
-    .filter(([i, j]) => i >= 0 && j >= 0 && i < this.w && j < this.h) // Ensure within bounds
-    .filter(([i, j]) => !newVisited.some(([vi, vj]) => vi === i && vj === j)); // Avoid visited nodes
-
-  // Only allow moving into spaces that are not walls
-  return list.filter(([i, j]) =>
-    [" ", endSymbol].includes(content.call(this, [i, j]))
-  );
-}
-
-function search(start, goal, visited) {
-  // Search for a path from start to goal nodes and track the path of node val's travelled in 'visited'
-  const val = content.call(this, start);
-  if (
-    val === null ||
-    this.checked.some(([ci, cj]) => ci === start[0] && cj === start[1])
-  )
-    return [];  // Skip this node if it's invalid or has already been checked
-
-  const newVisited = visited.slice(); // Shallow copy
-  newVisited.push(start);  // Update the visited array (nodes in this path)
-  this.checked.push(start);  // Update the checked array (nodes in any path)
-
-  if (val === goal) {
-    return finish.call(this, newVisited);
-  }
-  const opt = options.call(this, start, newVisited);
-  return opt.flatMap((node) => search.call(this, node, goal, newVisited));
-}
-
-function shorten(path) {
-  let last = 0;
-  while (last !== path.length) {
-    last = path.length;
-
-    const badTurn = path.slice(0, -2).find(([x, y], i) => {
-      const rest = path.slice(i + 2);
-      const neighbours = [
-        [x + 1, y],
-        [x - 1, y],
-        [x, y + 1],
-        [x, y - 1],
-      ];
-      return neighbours.some((k) =>
-        rest.some(([rx, ry]) => k[0] === rx && k[1] === ry)
-      );
-    });
-
-    // If there is a clear redundant path, cut it off.
-    // Only works when the path comes back to an adjacent cell.
-    // TODO: allow for shortening paths when the adjacency is more than a cell away, but it's whitespace between.
-    if (badTurn) {
-      const [x, y] = badTurn;
-      const i = path.indexOf(badTurn);
-      const neighbours = [
-        [x + 1, y],
-        [x - 1, y],
-        [x, y + 1],
-        [x, y - 1],
-      ];
-      const fixTurn = path
-        .slice()
-        .reverse()
-        .find((k) => neighbours.some(([nx, ny]) => k[0] === nx && k[1] === ny));
-      const j = path.indexOf(fixTurn);
-      path = [...path.slice(0, i + 1), ...path.slice(j)];
-    }
-  }
-  return path;
-}
-
-function finish(path) {
-  path = shorten(path); // Shorten the path first
-
-  // Iterate over the path to mark directions (skip start)
-  for (let idx = 1; idx < path.length - 1; idx++) {
-    const [i, j] = path[idx]; // Current position
-    const [u, v] = path[idx + 1]; // Next position in the path
-    const walkSymbol = "■"; // u > i ? "→" : u < i ? "←" : j > v ? "↑" : "↓";
-
-    // Only modify the path cells that are spaces or the start (don't overwrite walls)
-    if (mazeArray[j][i] === " " || mazeArray[j][i] === startSymbol) {
-      mazeArray[j][i] = walkSymbol;
-    }
-  }
-
-  // Print the maze while preserving the structure
-  const output = mazeArray.map((row) => row.join("")).join("\n");
-  console.log(output);
-  mazeOutput.value = output;
-  solved = true;
-}
-
 const startSymbol = "S";
 const endSymbol = "E";
-// const defaultHeight = 31;
-// const defaultWidth = 64;
-const defaultHeight = 39;
-const defaultWidth = 67; // must be 1 mod 3.
 
 let mazeInput = document.querySelector("#maze-input");  // Update variable for input
 const mazeOutput = document.querySelector("#maze-output");
@@ -121,15 +8,29 @@ const solveButton = document.getElementById("solve");
 const randomiseButton = document.getElementById("randomise");
 const solvableRandomiseButton = document.getElementById("solvable-randomise");
 const bunnyMazeButton = document.getElementById("bunny");
+const randHeightInput = document.getElementById("rand-height");
+const randWidthInput = document.getElementById("rand-width");
 let solved = false;
 
+// Set defaults for the randomise input dimensions
+const defaultHeight = 39;
+const defaultWidth = 67;
+randHeightInput.value = defaultHeight;
+randWidthInput.value = defaultWidth;
+
+
 setInitialMaze();  // Set the initial maze as default
+// Load the initial state
 let mazeInputText = mazeInput.value;
 let mazeArray = mazeInputText.split("\n").map((line) => line.toUpperCase().split(""));
 
 solveButton.addEventListener('click', solveHandler);
-randomiseButton.addEventListener('click', randomiseHandler.bind(this, defaultHeight, defaultWidth, false));
-solvableRandomiseButton.addEventListener('click', randomiseHandler.bind(this, defaultHeight, defaultWidth, true));
+randomiseButton.addEventListener('click', randomiseHandler.bind(
+  this, false
+));
+solvableRandomiseButton.addEventListener('click', randomiseHandler.bind(
+  this, true
+));
 bunnyMazeButton.addEventListener('click', bunnyMazeHandler);
 mazeInput.addEventListener('input', inputChangeHandler)
 
@@ -180,12 +81,28 @@ function solveHandler() {
   }
 
 }
-
-function randomiseHandler(HEIGHT = defaultHeight, WIDTH = defaultWidth, forceSolvable = false) {
+function validDimensions(HEIGHT, WIDTH) {
+  if (
+    HEIGHT < 2 || HEIGHT >= 100 ||
+    WIDTH < 3 || WIDTH >= 300
+  ) {
+    const invalidText = `Invalid dimensions (H x W).
+1 < H < 100
+3 < W < 300`
+    console.log(invalidText);
+    mazeOutput.value = invalidText;  // If there were invalid dimensions, let the user know
+    return false;
+  }
+  return true;
+}
+function randomiseHandler(forceSolvable = false) {
   // Randomise the map into a new one with size HEIGHT and WIDTH
   // Use "S" and "E" for start and end
-  // const HEIGHT = h;
-  // const WIDTH = w;
+  const HEIGHT = +randHeightInput.value;
+  const WIDTH = +randWidthInput.value;
+  if (!validDimensions(HEIGHT, WIDTH)) {
+    return
+  }
   function randRow(i = 0) {
     let randBit = "";
     if (i % 2 == 0) {
@@ -368,4 +285,112 @@ function setInitialMaze() {
  // Set solved state to false
  solved = false;
  mazeOutput.value = "";
+}
+function content(node) {
+  // Gives the content of the maze's jth row and ith column or null if out-of-bounds
+  const [i, j] = node;
+  if (!mazeArray[j] || !mazeArray[j][i]) return null;
+  return mazeArray[j][i];
+}
+
+function options(node, visited) {
+  // Gives the options to travel from node, removing illegal positions (out-of-bounds, walls and back-tracking)
+  const [x, y] = node;
+  const newVisited = visited.slice(); // Shallow copy
+  const list = [
+    [x + 1, y],
+    [x, y + 1],
+    [x, y - 1],
+    [x - 1, y],
+  ]
+    .filter(([i, j]) => i >= 0 && j >= 0 && i < this.w && j < this.h) // Ensure within bounds
+    .filter(([i, j]) => !newVisited.some(([vi, vj]) => vi === i && vj === j)); // Avoid visited nodes
+
+  // Only allow moving into spaces that are not walls
+  return list.filter(([i, j]) =>
+    [" ", endSymbol].includes(content.call(this, [i, j]))
+  );
+}
+
+function search(start, goal, visited) {
+  // Search for a path from start to goal nodes and track the path of node val's travelled in 'visited'
+  const val = content.call(this, start);
+  if (
+    val === null ||
+    this.checked.some(([ci, cj]) => ci === start[0] && cj === start[1])
+  )
+    return [];  // Skip this node if it's invalid or has already been checked
+
+  const newVisited = visited.slice(); // Shallow copy
+  newVisited.push(start);  // Update the visited array (nodes in this path)
+  this.checked.push(start);  // Update the checked array (nodes in any path)
+
+  if (val === goal) {
+    return finish.call(this, newVisited);
+  }
+  const opt = options.call(this, start, newVisited);
+  return opt.flatMap((node) => search.call(this, node, goal, newVisited));
+}
+
+function shorten(path) {
+  let last = 0;
+  while (last !== path.length) {
+    last = path.length;
+
+    const badTurn = path.slice(0, -2).find(([x, y], i) => {
+      const rest = path.slice(i + 2);
+      const neighbours = [
+        [x + 1, y],
+        [x - 1, y],
+        [x, y + 1],
+        [x, y - 1],
+      ];
+      return neighbours.some((k) =>
+        rest.some(([rx, ry]) => k[0] === rx && k[1] === ry)
+      );
+    });
+
+    // If there is a clear redundant path, cut it off.
+    // Only works when the path comes back to an adjacent cell.
+    // TODO: allow for shortening paths when the adjacency is more than a cell away, but it's whitespace between.
+    if (badTurn) {
+      const [x, y] = badTurn;
+      const i = path.indexOf(badTurn);
+      const neighbours = [
+        [x + 1, y],
+        [x - 1, y],
+        [x, y + 1],
+        [x, y - 1],
+      ];
+      const fixTurn = path
+        .slice()
+        .reverse()
+        .find((k) => neighbours.some(([nx, ny]) => k[0] === nx && k[1] === ny));
+      const j = path.indexOf(fixTurn);
+      path = [...path.slice(0, i + 1), ...path.slice(j)];
+    }
+  }
+  return path;
+}
+
+function finish(path) {
+  path = shorten(path); // Shorten the path first
+
+  // Iterate over the path to mark directions (skip start)
+  for (let idx = 1; idx < path.length - 1; idx++) {
+    const [i, j] = path[idx]; // Current position
+    const [u, v] = path[idx + 1]; // Next position in the path
+    const walkSymbol = "■"; // u > i ? "→" : u < i ? "←" : j > v ? "↑" : "↓";
+
+    // Only modify the path cells that are spaces or the start (don't overwrite walls)
+    if (mazeArray[j][i] === " " || mazeArray[j][i] === startSymbol) {
+      mazeArray[j][i] = walkSymbol;
+    }
+  }
+
+  // Print the maze while preserving the structure
+  const output = mazeArray.map((row) => row.join("")).join("\n");
+  console.log(output);
+  mazeOutput.value = output;
+  solved = true;
 }
