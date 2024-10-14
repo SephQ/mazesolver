@@ -103,6 +103,14 @@ function randomiseHandler(forceSolvable = false) {
   if (!validDimensions(HEIGHT, WIDTH)) {
     return
   }
+  // Set the size of the input and output to the dimensions + some buffer
+  // https://stackoverflow.com/questions/3392493/adjust-width-of-input-field-to-its-input
+  const boxHeight = HEIGHT * 2 + 10;
+  const boxWidth = WIDTH + 30;
+  const newStyle = `height: ${boxHeight}ch; width: ${boxWidth}ch; font: courier`
+  mazeInput.style = newStyle;
+  mazeOutput.style = newStyle;
+
   function randRow(i = 0) {
     let randBit = "";
     if (i % 2 == 0) {
