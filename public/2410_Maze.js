@@ -89,8 +89,8 @@ function shorten(path) {
 function finish(path) {
   path = shorten(path); // Shorten the path first
 
-  // Iterate over the path to mark directions
-  for (let idx = 0; idx < path.length - 1; idx++) {
+  // Iterate over the path to mark directions (skip start)
+  for (let idx = 1; idx < path.length - 1; idx++) {
     const [i, j] = path[idx]; // Current position
     const [u, v] = path[idx + 1]; // Next position in the path
     const walkSymbol = "■"; // u > i ? "→" : u < i ? "←" : j > v ? "↑" : "↓";
